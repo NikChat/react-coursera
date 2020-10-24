@@ -1,13 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Card, CardImg, CardImgOverlay, CardText, CardBody,
     CardTitle } from 'reactstrap';
 
-class DishDetail extends Component { //will display the details of a selected dish
-    constructor(props) {
-        super(props);
-    }
-
-    renderComments(comments) {
+    function RenderComments({comments}) {
         if (comments != null) {
             const commentsDisplay = comments.map( (comment) => {
                 return (
@@ -35,23 +30,23 @@ class DishDetail extends Component { //will display the details of a selected di
         
     }
 
-    render() { 
-        if (this.props.selectedDish != null)
+    const DishDetail = (props) => { 
+        if (props.selectedDish != null)
             return (
                 <div className="container">
                     <div className="row">
                         <div  className="col-12 col-md-5 m-1"> {/* details of the dish in a Card */}
                             <Card>
-                                <CardImg top src={this.props.selectedDish.image} alt={this.props.selectedDish.name} />
+                                <CardImg top src={props.selectedDish.image} alt={props.selectedDish.name} />
                                 <CardBody>
-                                    <CardTitle>{this.props.selectedDish.name}</CardTitle>
-                                    <CardText>{this.props.selectedDish.description}</CardText>
+                                    <CardTitle>{props.selectedDish.name}</CardTitle>
+                                    <CardText>{props.selectedDish.description}</CardText>
                                 </CardBody>
                             </Card>
                         </div>
                         <div className="col-12 col-md-5 m-1"> {/*list of comments*/}
                             <h4>Comments</h4>
-                            {this.renderComments(this.props.selectedDish.comments)}
+                            <RenderComments comments={props.selectedDish.comments} />
                         </div>
                     </div>
                 </div>
@@ -61,7 +56,7 @@ class DishDetail extends Component { //will display the details of a selected di
             <div></div>
         );
     }
-}
+
 
 
 export default DishDetail;
