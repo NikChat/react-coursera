@@ -40,12 +40,20 @@ class Main extends Component { //Conteiner Component (holds the state)
       );
     }
 
+    const DishWithId = ({match}) => { // The Route will pass 3 props here (match, location, history)
+      return(
+          <DishDetail selectedDish={this.state.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]} 
+            comments={this.state.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))} />
+      );
+    };
+
     return (
       <div>
         <Header />
         <Switch>
           <Route path='/home' component={HomePage} />
           <Route exact path='/menu' component={() => <Menu dishes={this.state.dishes} />} />
+          <Route path='/menu/:dishId' component={DishWithId} />
           <Route exact path='/contactus' component={Contact} />
           <Redirect to="/home" />  {/* Anything that doesn't match any Route, will redirect to /home */}
         </Switch>
