@@ -27,14 +27,6 @@ import { Link } from 'react-router-dom';
             );
         });
 
-        // return (
-        //     <div className="container">
-        //         <div className="row">
-        //             {menu}
-        //         </div>
-        //     </div>
-        // );
-
         return (
             <div className="container">
                 <div className="row">
