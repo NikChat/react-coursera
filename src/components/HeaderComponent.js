@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Nav, Navbar, NavbarBrand, NavbarToggler, Collapse, NavItem, Jumbotron } from 'reactstrap';
+import { Navbar, NavbarBrand, Nav, NavbarToggler, Collapse, NavItem, Jumbotron,
+    Button, Modal, ModalHeader, ModalBody,
+    Form, FormGroup, Input, Label } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 
 class Header extends Component {
@@ -9,8 +11,12 @@ class Header extends Component {
         this.toggleNav = this.toggleNav.bind(this); {/* We make this method (toggleNav()) available for use in our JSX. */}
                                                     // Then we can call it with this.: <NavbarToggler onClick={this.toggleNav} />
                                                     // We could call it with arrow function, without doing this bind.
+        this.toggleModal = this.toggleModal.bind(this);
+        this.handleLogin = this.handleLogin.bind(this);
+
         this.state = {
-          isNavOpen: false
+            isNavOpen: false,
+            isModalOpen: false
         };
       }
 
@@ -19,6 +25,20 @@ class Header extends Component {
           isNavOpen: !this.state.isNavOpen
         });
       }
+
+      toggleModal() {
+        this.setState({
+          isModalOpen: !this.state.isModalOpen
+        });
+      }
+
+      handleLogin(event) {
+        this.toggleModal(); // We close the Modal (once the form is submitted)
+        alert("Username: " + this.username.value + " Password: " + this.password.value // I am retrieving values directly from the DOM
+            + " Remember: " + this.remember.checked);
+        event.preventDefault();
+
+    }
 
     render() {
         return(
@@ -53,6 +73,13 @@ class Header extends Component {
                                     </NavLink>
                                 </NavItem>
                             </Nav>
+                            <Nav className="ml-auto" navbar>
+                                <NavItem>
+                                    <Button outline onClick={this.toggleModal}> {/* Shows/Hides the modal */}
+                                        <span className="fa fa-sign-in fa-lg"></span> Login
+                                    </Button>
+                                </NavItem>
+                            </Nav>
                         </Collapse>
                     </div>
                 </Navbar>
@@ -66,6 +93,31 @@ class Header extends Component {
                         </div>
                     </div>
                 </Jumbotron>
+                <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+                    <ModalHeader toggle={this.toggleModal}>Login</ModalHeader>
+                    <ModalBody>
+                        <Form onSubmit={this.handleLogin}> {/* Uncontrolled Form */}
+                            <FormGroup>
+                                <Label htmlFor="username">Username</Label>
+                                <Input type="text" id="username" name="username"
+                                    innerRef={(input) => this.username = input} /> {/* We extract refs from the input boxes from the DOM */}
+                            </FormGroup>
+                            <FormGroup>
+                                <Label htmlFor="password">Password</Label>
+                                <Input type="password" id="password" name="password"
+                                    innerRef={(input) => this.password = input}  />
+                            </FormGroup>
+                            <FormGroup check>
+                                <Label check>
+                                    <Input type="checkbox" name="remember"
+                                    innerRef={(input) => this.remember = input}  />
+                                    Remember me
+                                </Label>
+                            </FormGroup>
+                            <Button type="submit" value="submit" color="primary">Login</Button>
+                        </Form>
+                    </ModalBody>
+                </Modal>
             </div>
         );
     }
