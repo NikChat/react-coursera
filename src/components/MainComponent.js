@@ -6,65 +6,62 @@ import About from './AboutComponent';
 import DishDetail from './DishdetailComponent';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
-import { DISHES } from '../shared/dishes';
-import { COMMENTS } from '../shared/comments';
-import { PROMOTIONS } from '../shared/promotions';
-import { LEADERS } from '../shared/leaders';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect, withRouter } from 'react-router-dom'
+import { connect } from 'react-redux';
 
+const mapStateToProps = state => { // Will map the Store state into props (takes the Redux Store state => reducer.js)
+  return {
+    dishes: state.dishes, // These 4 become available as props to MainComponent, by connecting the Component to the Store.
+    comments: state.comments,
+    promotions: state.promotions,
+    leaders: state.leaders
+  }
+} 
+
+//Update the Main component to use redux: Main Component will now obtain the state from my redux store. I will connent Main to the Store.
 class Main extends Component { //Conteiner Component (holds the state)
 
   constructor(props) {
     super(props);
-
-    this.state = {
-      dishes: DISHES,
-      comments: COMMENTS,
-      promotions: PROMOTIONS,
-      leaders: LEADERS
-    };
   }
-
-  // onDishSelect(dishId) {
-  //   this.setState({ selectedDish: dishId});
-  // }
 
   render() {
 
     const HomePage = () => { // Declare HomePage function Component
       return(
           <Home 
-              dish={this.state.dishes.filter((dish) => dish.featured)[0]}
-              promotion={this.state.promotions.filter((promo) => promo.featured)[0]}
-              leader={this.state.leaders.filter((leader) => leader.featured)[0]}
+              dish={this.props.dishes.filter((dish) => dish.featured)[0]}
+              promotion={this.props.promotions.filter((promo) => promo.featured)[0]}
+              leader={this.props.leaders.filter((leader) => leader.featured)[0]}
           />
       );
     }
 
     const DishWithId = ({match}) => { // The Route will pass 3 props here (match, location, history)
       return(
-          <DishDetail selectedDish={this.state.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]} 
-            comments={this.state.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))} />
+          <DishDetail selectedDish={this.props.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]} 
+            comments={this.props.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))} />
       );
     };
 
     return (
       <div>
         <Header />
-        <Switch>
-          <Route path='/home' component={HomePage} />
-          <Route exact path='/menu' component={() => <Menu dishes={this.state.dishes} />} /> {/* passing props */}
-          <Route path='/menu/:dishId' component={DishWithId} />
-          <Route exact path='/contactus' component={Contact} />
-          <Route exact path='/aboutus' component={() => <About leaders={this.state.leaders} />} />
-          <Redirect to="/home" />  {/* Anything that doesn't match any Route, will redirect to /home */}
-        </Switch>
-        {/* <Menu dishes={this.state.dishes} onClick={(dishId) => this.onDishSelect(dishId)} /> */}
-        {/* <DishDetail selectedDish={this.state.dishes.filter((dish) => dish.id === this.state.selectedDish)[0]} /> */}
+        <div>
+          <Switch>
+            <Route path='/home' component={HomePage} />
+            <Route exact path='/menu' component={() => <Menu dishes={this.props.dishes} />} /> {/* passing props */}
+            <Route path='/menu/:dishId' component={DishWithId} />
+            <Route exact path='/contactus' component={Contact} />
+            <Route exact path='/aboutus' component={() => <About leaders={this.props.leaders} />} />
+            <Redirect to="/home" />  {/* Anything that doesn't match any Route, will redirect to /home */}
+          </Switch>
+        </div>
         <Footer />
       </div>
     );
   }
 }
 
-export default Main;
+export default withRouter(connect(mapStateToProps)(Main)); // connect MainComponent to the React Store.
+                                                          // WithRouter to work with React Router
