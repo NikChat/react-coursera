@@ -13,9 +13,9 @@ export const initialState = { // My initial state. I removed the state from the 
     leaders: LEADERS
 };
 
-// My reducer function -> recieves the current state & an action to generate the next state:
+// My reducer function -> receives the current state & an action to generate the next state:
 // I can't modify the state directly here in the Reducer. I can only do an immutable change and return an updated version of the state
-// When the Reduced is first called by my store, my store doesn't have state (it would be undefined). To avoid issues, 
+// When the Reducer is first called by my store, my store doesn't have state (it would be undefined). To avoid issues, 
 // I say if state == undefined -> state = initialState.
 export const Reducer = (state = initialState, action) => { // the default value for state parameter = initialState (ES6)
     return state; // I am just returning the state as it is for now. I haven't implemented any actions
