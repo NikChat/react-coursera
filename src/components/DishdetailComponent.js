@@ -132,7 +132,6 @@ class CommentForm extends Component {
         if (props.selectedDish != null)
             return (
                 <div className="container">
-
                     <div className="row">
                         <Breadcrumb>
                             <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
@@ -159,7 +158,6 @@ class CommentForm extends Component {
                             <RenderComments comments={props.comments} />
                         </div>
                     </div>
-
                 </div>
             );
         else
@@ -167,7 +165,5 @@ class CommentForm extends Component {
             <div></div>
         );
     }
-
-
 
 export default DishDetail;
