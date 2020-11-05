@@ -9,6 +9,7 @@ import Footer from './FooterComponent';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { addComment, fetchDishes } from '../redux/ActionCreators';
+import { actions } from 'react-redux-form';
 
 const mapStateToProps = state => { // Will map the Store state into props (takes the Redux Store state => reducer.js)
   return {
@@ -23,7 +24,8 @@ const mapDispatchToProps = dispatch => ({ // dispatch function from our store
   
   addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)),
   // addComment(dishId, rating, author, comment) = action creator that will return the action object
-  fetchDishes: () => { dispatch(fetchDishes())} // make fetchDishes available for use in my component
+  fetchDishes: () => { dispatch(fetchDishes())}, // make fetchDishes available for use in my component
+  resetFeedbackForm: () => { dispatch(actions.reset('feedback'))} // we will label the model as feedback
 });
 
 //Update the Main component to use redux: Main Component will now obtain the state from my redux store. I will connent Main to the Store.
@@ -70,7 +72,7 @@ class Main extends Component { //Conteiner Component (holds the state)
             <Route path='/home' component={HomePage} />
             <Route exact path='/menu' component={() => <Menu dishes={this.props.dishes} />} /> {/* passing props */}
             <Route path='/menu/:dishId' component={DishWithId} />
-            <Route exact path='/contactus' component={Contact} />
+            <Route exact path='/contactus' component={() => <Contact resetFeedbackForm={this.props.resetFeedbackForm} />} />
             <Route exact path='/aboutus' component={() => <About leaders={this.props.leaders} />} />
             <Redirect to="/home" />  {/* Anything that doesn't match any Route, will redirect to /home */}
           </Switch>
