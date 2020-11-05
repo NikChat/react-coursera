@@ -2,15 +2,45 @@ import * as ActionTypes from './ActionTypes';
 import { DISHES } from '../shared/dishes'; //removed from dishes.js -> the action creator will suply this info to the reducer
 import { baseUrl } from '../shared/baseUrl';
 
-export const addComment = (dishId, rating, author, comment) => ({ // Function that creates an action object
-    type: ActionTypes.ADD_COMMENT, // I send this action type to the store
-    payload: {
+export const addComment = (comment) => ({ // will be used by the postComment to push comment to the Redux Store
+    type: ActionTypes.ADD_COMMENT,
+    payload: comment
+});
+
+export const postComment = (dishId, rating, author, comment) => (dispatch) => {
+
+    const newComment = {
         dishId: dishId,
         rating: rating,
         author: author,
         comment: comment
-    }
-});
+    };
+    newComment.date = new Date().toISOString();
+    
+    return fetch(baseUrl + 'comments', {
+        method: "POST",
+        body: JSON.stringify(newComment),
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: "same-origin"
+    })
+    .then(response => {
+        if (response.ok) {
+          return response;
+        } else {
+          var error = new Error('Error ' + response.status + ': ' + response.statusText);
+          error.response = response;
+          throw error;
+        }
+      },
+      error => {
+            throw error;
+      })
+    .then(response => response.json())
+    .then(response => dispatch(addComment(response))) // pushed to the Redux Store
+    .catch(error =>  { console.log('post comments', error.message); alert('Your comment could not be posted\nError: '+error.message); });
+};
 
 export const fetchDishes = () => (dispatch) => { // thunk -> returns a function that is going to dispatch several actions
 
