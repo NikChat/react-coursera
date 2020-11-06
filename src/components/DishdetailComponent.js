@@ -5,6 +5,7 @@ import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Link } from 'react-router-dom';
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 
 const minLength = (len) => (val) => val && (val.length >= len);
 const maxLength = (len) => (val) => !(val) || (val.length <= len); // Ensure that the length of the value entered <= a certain length
@@ -164,13 +165,19 @@ class CommentForm extends Component {
 
                     <div className="row">
                         <div  className="col-12 col-md-5 m-1"> {/* details of the dish in a Card */}
-                            <Card>
-                                <CardImg top src={baseUrl + props.selectedDish.image} alt={props.selectedDish.name} />
-                                <CardBody>
-                                    <CardTitle>{props.selectedDish.name}</CardTitle>
-                                    <CardText>{props.selectedDish.description}</CardText>
-                                </CardBody>
-                            </Card>
+                            <FadeTransform
+                                in
+                                transformProps={{
+                                    exitTransform: 'scale(0.5) translateY(-50%)'
+                                }}>
+                                <Card>
+                                    <CardImg top src={baseUrl + props.selectedDish.image} alt={props.selectedDish.name} />
+                                    <CardBody>
+                                        <CardTitle>{props.selectedDish.name}</CardTitle>
+                                        <CardText>{props.selectedDish.description}</CardText>
+                                    </CardBody>
+                                </Card>
+                            </FadeTransform>
                         </div>
                         <div className="col-12 col-md-5 m-1"> {/*list of comments*/}
                             <h4>Comments</h4>
